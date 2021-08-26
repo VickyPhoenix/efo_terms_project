@@ -177,4 +177,4 @@ else:
 conn.close()
 logger.info('Inserting/Updating all tables finished')
 
-sys.exit("Run terminated")
+sys.exit("Run terminated and tasks completed")
