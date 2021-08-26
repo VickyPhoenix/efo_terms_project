@@ -22,10 +22,6 @@ args = parser.parse_args()
 user_nm = str(args.user)
 post_password = str(args.post_pass)
 
-print(user_nm)
-print(post_password)
-
-
 ##################### SQL PART #####################
 #establishing the connection
 conn = psycopg2.connect(
@@ -50,7 +46,7 @@ if not exists:
 ##### Load data using Python JSON module
 with urllib.request.urlopen("https://www.ebi.ac.uk/ols/api/ontologies/efo/terms") as url:
     data = json.loads(url.read().decode())
-    print(data)
+    #print(data)
 
 ### ~~~~~~~~~~~~~~ Transformation process starts for global dataframe ~~~~~~~~~~~~~~ ###
 
@@ -60,8 +56,8 @@ terms_keys = data["_embedded"]["terms"]
 df = pd.DataFrame(terms_keys[1:],columns=terms_keys[0])
 
 #Print the work as far
-with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-    print(df)
+#with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+    #print(df)
 
 #Keep useful columns for the next steps
 df = df[['label','annotation','synonyms','_links','iri','ontology_prefix']]
@@ -72,9 +68,7 @@ df = pd.concat([df.drop(['_links'], axis=1), df['_links'].apply(pd.Series)], axi
 df = df[['label','id','synonyms','parents','children','iri','ontology_prefix']] #select desired column
 
 #Filter out the NaN lines as id cannot be NaN
-#df['id'] = df['id'].astype(str)
 df = df.dropna(subset=['id'])
-#df['ontology_prefix'] = df['ontology_prefix'].astype(str)
 
 #Asked dataset was "EFO terms"
 #so, i tried to filter them since i observed and other types exist in ontology_prefix field
